@@ -525,6 +525,7 @@ class CRM_Hrjobcontract_Upgrader extends CRM_Hrjobcontract_Upgrader_Base {
     $this->upgrade_1017();
     $this->upgrade_1020();
     $this->upgrade_1024();
+    $this->upgrade_1025();
   }
 
   function upgrade_1001() {
@@ -1012,6 +1013,18 @@ class CRM_Hrjobcontract_Upgrader extends CRM_Hrjobcontract_Upgrader_Base {
   function upgrade_1024() {
     $tableName = CRM_Hrjobcontract_DAO_PayScale::getTableName();
     CRM_Core_DAO::executeQuery("DELETE FROM {$tableName} WHERE pay_scale != 'Not Applicable'");
+
+    return true;
+  }
+
+  /**
+   * Removes all Hour Locations except 'Head Office'
+   *
+   * @return TRUE
+   */
+  function upgrade_1025() {
+    $tableName = CRM_Hrjobcontract_DAO_HoursLocation::getTableName();
+    CRM_Core_DAO::executeQuery("DELETE FROM {$tableName} WHERE location != 'Head office'");
 
     return true;
   }
