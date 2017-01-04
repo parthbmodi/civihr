@@ -557,7 +557,7 @@ class CRM_HRAbsence_Upgrader extends CRM_HRAbsence_Upgrader_Base {
 
   /**
    * Upgrader to rename 'Vacation' absence type
-   * to 'Annual Leave'
+   * and its related activity type  to 'Annual Leave'
    *
    * @return bool
    */
@@ -567,16 +567,19 @@ class CRM_HRAbsence_Upgrader extends CRM_HRAbsence_Upgrader_Base {
     $absenceType->name = 'Vacation';
     $absenceType->find(TRUE);
 
-    // rename absence type name and title
-    $absenceType->name = 'Annual Leave';
-    $absenceType->title = 'Annual Leave';
-    $absenceType->save();
+    if (!empty($absenceType->id)) {
+      // rename absence type name and title
+      $absenceType->name = 'Annual Leave';
+      $absenceType->title = 'Annual Leave';
+      $absenceType->save();
+    }
 
     // Find 'Vacation' activity type ID
     $optionValue = civicrm_api3('OptionValue', 'get', [
       'sequential' => 1,
-      'option_group_id' => "activity_type",
-      'name' => "Vacation",
+      'option_group_id' => 'activity_type',
+      'name' => 'Vacation',
+      'options' => ['limit' => 1]
     ]);
 
     // update activity type name and title
@@ -584,8 +587,8 @@ class CRM_HRAbsence_Upgrader extends CRM_HRAbsence_Upgrader_Base {
       civicrm_api3('OptionValue', 'create', [
         'id' => $optionValue['id'],
         'option_group_id' => "activity_type",
-        'name' => "Annual Leave",
-        'title' => "Annual Leave",
+        'name' => 'Annual Leave',
+        'title' => 'Annual Leave',
       ]);
     }
 

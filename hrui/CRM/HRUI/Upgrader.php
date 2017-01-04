@@ -30,48 +30,26 @@
  */
 class CRM_HRUI_Upgrader extends CRM_HRUI_Upgrader_Base {
 
-  // By convention, functions that look like "function upgrade_NNNN()" are
-  // upgrade tasks. They are executed in order (like Drupal's hook_update_N).
+  use CRM_HRUI_Upgrader_Steps_4700;
+  use CRM_HRUI_Upgrader_Steps_4701;
 
   public function install() {
+    $this->runAllUpgraders();
+  }
+
+  /**
+   * Runs all the upgrader methods when installing the extension
+   */
+  private function runAllUpgraders() {
     $revisions = $this->getRevisions();
 
     foreach ($revisions as $revision) {
       $methodName = 'upgrade_' . $revision;
 
-      if (is_callable(array($this, $methodName))) {
+      if (is_callable([$this, $methodName])) {
         $this->{$methodName}();
       }
     }
   }
 
-  /**
-   * Create (Import Custom Fields) menu items
-   *
-   * @return bool
-   */
-  public function upgrade_4700() {
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_navigation WHERE name = 'jobImport'");
-
-    $contactsNavID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Contacts', 'id', 'name');
-    $importContactWeight = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Import Contacts', 'weight', 'name');
-    $params = [
-      'name' => 'import_custom_fields',
-      'label' => ts('Import Custom Fields'),
-      'url' => 'civicrm/import/custom?reset=1',
-      'parent_id' => $contactsNavID,
-      'is_active' => TRUE,
-      'weight' => $importContactWeight,
-      'permission' => 'access CiviCRM',
-      'domain_id' => CRM_Core_Config::domainID(),
-    ];
-
-    $navigation = new CRM_Core_DAO_Navigation();
-    $navigation->copyValues($params);
-    $navigation->save();
-
-    CRM_Core_BAO_Navigation::resetNavigation();
-
-    return TRUE;
-  }
 }
