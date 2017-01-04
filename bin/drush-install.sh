@@ -53,3 +53,6 @@ if [ "$WITH_HR_SAMPLE" == "1" ]; then
   set +ex
 fi
 
+# Install 'masquerade' module
+drush en -y masquerade
+
