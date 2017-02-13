@@ -65,7 +65,7 @@ define([
 
         it('calls the getAll() method', function () {
           expect(LeaveRequestAPI.getAll.calls.mostRecent().args[0]).toBe('SicknessRequest');
-          expect(LeaveRequestAPI.getAll.calls.mostRecent().args[5]).toBe('getFull');
+          expect(LeaveRequestAPI.getAll.calls.mostRecent().args[5]).toBe('get');
         });
       });
 
@@ -81,7 +81,7 @@ define([
 
         it('calls the getAll() method', function () {
           expect(LeaveRequestAPI.getAll.calls.mostRecent().args[0]).toBe('TOILRequest');
-          expect(LeaveRequestAPI.getAll.calls.mostRecent().args[5]).toBe('getFull');
+          expect(LeaveRequestAPI.getAll.calls.mostRecent().args[5]).toBe('get');
         });
       });
     });
@@ -819,11 +819,11 @@ define([
         .respond(mockData.all());
 
       //Intercept backend calls for SicknessRequest.all
-      $httpBackend.whenGET(/action\=getFull&entity\=SicknessRequest/)
+      $httpBackend.whenGET(/action\=get&entity\=SicknessRequest/)
         .respond(sicknessMockData.all());
 
       //Intercept backend calls for TOILRequest.all
-      $httpBackend.whenGET(/action\=getFull&entity\=TOILRequest/)
+      $httpBackend.whenGET(/action\=get&entity\=TOILRequest/)
         .respond(toilMockData.all());
 
       //Intercept backend calls for LeaveRequest.balanceChangeByAbsenceType

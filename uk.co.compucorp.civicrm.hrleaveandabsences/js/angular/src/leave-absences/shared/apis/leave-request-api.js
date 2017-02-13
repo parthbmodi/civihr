@@ -51,9 +51,10 @@ define([
        */
       all: function (filters, pagination, sort, params, cache, leaveRequestType) {
         $log.debug('LeaveRequestAPI.all');
-        var entityName = getEntityName(leaveRequestType);
+        var entityName = getEntityName(leaveRequestType),
+          actionName = (leaveRequestType === 'sick' || leaveRequestType === 'toil') ? 'get' : 'getFull';
 
-        return this.getAll(entityName, filters, pagination, sort, params, 'getFull', cache);
+        return this.getAll(entityName, filters, pagination, sort, params, actionName, cache);
       },
 
       /**
